@@ -1,7 +1,11 @@
-export const Content = ({ part, exercise }) => {
+import { Part } from "../Part"
+
+export const Content = ({ part }) => {
   return (
-    <p>
-      {part} {exercise}
-    </p>
+    <div>
+      <Part content={part[0]} />
+      <Part content={part[1]} />
+      <Part content={part[2]} />
+    </div>
   )
 }

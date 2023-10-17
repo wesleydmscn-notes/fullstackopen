@@ -1,5 +1,7 @@
 import { useState } from "react"
+
 import { Statistics } from "./components/Statistics"
+import { Button } from "./components/Button"
 
 export const App = () => {
   const [good, setGood] = useState(0)
@@ -16,7 +18,7 @@ export const App = () => {
     }
 
     const currentOption = feedbackOptions[feedbackType]
-    
+
     currentOption()
   }
 
@@ -24,9 +26,9 @@ export const App = () => {
     <>
       <h1>give feedback</h1>
 
-      <button onClick={() => handleClick("good")}>good</button>
-      <button onClick={() => handleClick("neutral")}>neutral</button>
-      <button onClick={() => handleClick("bad")}>bad</button>
+      <Button text="good" handleClick={() => handleClick("good")} />
+      <Button text="neutral" handleClick={() => handleClick("neutral")} />
+      <Button text="bad" handleClick={() => handleClick("bad")} />
 
       {sum !== 0 ? (
         <Statistics feedbacks={{ good, neutral, bad, sum }} />

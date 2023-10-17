@@ -28,7 +28,11 @@ export const App = () => {
       <button onClick={() => handleClick("neutral")}>neutral</button>
       <button onClick={() => handleClick("bad")}>bad</button>
 
-      <Statistics feedbacks={{good, neutral, bad, sum}}/>
+      {sum !== 0 ? (
+        <Statistics feedbacks={{ good, neutral, bad, sum }} />
+      ) : (
+        <p>No feedback given</p>
+      )}
     </>
   )
 }

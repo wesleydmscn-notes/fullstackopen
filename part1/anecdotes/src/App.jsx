@@ -13,15 +13,29 @@ export const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
-  const handleClick = () => {
+  const [points, setPoints] = useState(
+    Object.assign({}, Array(anecdotes.length).fill(0))
+  )
+
+  const handleClickNext = () => {
     const random = Math.floor(Math.random() * anecdotes.length)
     setSelected(random)
+  }
+
+  const handleClickVote = () => {
+    const newPoints = { ...points }
+    newPoints[selected] += 1
+    
+    setPoints(newPoints)
   }
 
   return (
     <>
       <p>{anecdotes[selected]}</p>
-      <button onClick={handleClick}>next anecdotes</button>
+      <p>has {points[selected]} votes</p>
+
+      <button onClick={handleClickVote}>vote</button>
+      <button onClick={handleClickNext}>next anecdotes</button>
     </>
   )
 }

@@ -1,4 +1,6 @@
 export const Total = ({ exercises }) => {
-  const total = exercises.reduce((acc, curr) => acc + curr.exercises, 0)
-  return <h3>Total of {total} exercises</h3>
+  const listOfExercises = exercises.map((part) => part.exercises)
+  const sum = listOfExercises.reduce((acc, curr) => acc + curr, 0)
+
+  return <h3>Total of {sum} exercises</h3>
 }

@@ -1,5 +1,9 @@
 import { useState } from "react"
 
+import { Filter } from "./components/Filter"
+import { PersonForm } from "./components/PersonForm"
+import { Persons } from "./components/Persons"
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: "Arto Hellas", number: "040-123456", id: 1 },
@@ -32,45 +36,28 @@ const App = () => {
       person.name.toLocaleLowerCase().includes(value.toLowerCase())
     )
 
-    setFilteredPersons(target || null)
+    if (target.length > 0 && value !== "") {
+      setFilteredPersons(target)
+    } else {
+      setFilteredPersons(null)
+    }
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
 
-      <div>
-        filter shown with <input onChange={handleChange} type="search" />
-      </div>
+      <Filter handleChange={handleChange} />
 
-      <form>
-        <div>
-          name: <input onChange={(event) => setNewName(event.target.value)} />
-        </div>
-        <div>
-          number:{" "}
-          <input onChange={(event) => setNewNumber(event.target.value)} />
-        </div>
-        <div>
-          <button onClick={handleSubmit} type="submit">
-            add
-          </button>
-        </div>
-      </form>
+      <PersonForm
+        setNewName={setNewName}
+        setNewNumber={setNewNumber}
+        handleSubmit={handleSubmit}
+      />
 
       <h2>Numbers</h2>
 
-      {filteredPersons
-        ? filteredPersons.map((person, i) => (
-            <p key={`${person}-${i}`}>
-              {person.name} {person.number}
-            </p>
-          ))
-        : persons.map((person, i) => (
-            <p key={`${person}-${i}`}>
-              {person.name} {person.number}
-            </p>
-          ))}
+      <Persons filteredPersons={filteredPersons} persons={persons} />
     </div>
   )
 }

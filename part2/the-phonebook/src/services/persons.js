@@ -10,8 +10,12 @@ const createPerson = (person) => {
   return axios.post(baseurl, person)
 }
 
+const updatePerson = (id, data) => {
+  return axios.put(`${baseurl}/${id}`, data)
+}
+
 const deletePerson = (id) => {
   return axios.delete(`${baseurl}/${id}`)
 }
 
-export { getAll, createPerson, deletePerson }
+export { getAll, createPerson, updatePerson, deletePerson }

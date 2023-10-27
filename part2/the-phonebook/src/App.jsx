@@ -4,7 +4,12 @@ import { Filter } from "./components/Filter"
 import { PersonForm } from "./components/PersonForm"
 import { Persons } from "./components/Persons"
 
-import { getAll, createPerson, deletePerson } from "./services/persons"
+import {
+  getAll,
+  createPerson,
+  updatePerson,
+  deletePerson,
+} from "./services/persons"
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -14,20 +19,43 @@ const App = () => {
 
   useEffect(() => {
     getAll().then((response) => setPersons(response.data))
-  }, [persons])
+  }, [])
 
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    const exists = persons.find((person) => person.name === newName)
+    const personIndex = persons.findIndex((person) => person.name === newName)
+    const targetPerson = persons[personIndex] || null
 
-    if (exists) {
+    if (
+      targetPerson &&
+      targetPerson.name &&
+      targetPerson.number !== newNumber
+    ) {
+      const result = window.confirm(
+        `${targetPerson.name} is already added to phonebook, replace the old number with new one?`
+      )
+
+      if (result) {
+        const newData = { name: targetPerson.name, number: newNumber }
+
+        updatePerson(targetPerson.id, newData).then((response) => {
+          const newData = persons.map((person) =>
+            person.id === response.data.id ? response.data : person
+          )
+
+          setPersons(newData)
+          setFilteredPersons(null)
+        })
+      }
+    } else if (targetPerson && targetPerson.name) {
       alert(`${newName} is already added to phonebook`)
     } else if (newName !== "" && newNumber !== "") {
       const newPerson = { name: newName, number: newNumber }
 
-      createPerson(newPerson)
-      setPersons((current) => current.concat(newPerson))
+      createPerson(newPerson).then((response) => {
+        setPersons((current) => current.concat(response.data))
+      })
     }
   }
 
@@ -47,13 +75,12 @@ const App = () => {
   const handleDelete = (id) => {
     const findPerson = persons.find((person) => person.id === id)
 
-    console.log(id)
-
-    if (window.confirm(`Delete ${findPerson.name}`)) {
-      const updatedPersons = persons.filter((person) => person.id !== id)
-
-      setPersons(updatedPersons)
-      deletePerson(id)
+    if (findPerson && window.confirm(`Delete ${findPerson.name}`)) {
+      deletePerson(findPerson.id).then((response) => {
+        const updatedPersons = persons.filter((person) => person.id !== id)
+        setPersons(updatedPersons)
+        setFilteredPersons(null)
+      })
     }
   }
 

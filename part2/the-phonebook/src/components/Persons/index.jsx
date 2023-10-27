@@ -1,16 +1,26 @@
-export const Persons = ({ filteredPersons, persons }) => {
+import { Person } from "./Person"
+
+export const Persons = ({ filteredPersons, persons, handleClick }) => {
   return (
     <>
       {filteredPersons
         ? filteredPersons.map((person, i) => (
-            <p key={`${person}-${i}`}>
-              {person.name} {person.number}
-            </p>
+            <Person
+              key={`${person}-${i}`}
+              id={person.id}
+              name={person.name}
+              number={person.number}
+              handleClick={handleClick}
+            />
           ))
         : persons.map((person, i) => (
-            <p key={`${person}-${i}`}>
-              {person.name} {person.number}
-            </p>
+            <Person
+              key={`${person}-${i}`}
+              id={person.id}
+              name={person.name}
+              number={person.number}
+              handleClick={handleClick}
+            />
           ))}
     </>
   )

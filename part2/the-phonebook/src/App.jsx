@@ -4,7 +4,7 @@ import { Filter } from "./components/Filter"
 import { PersonForm } from "./components/PersonForm"
 import { Persons } from "./components/Persons"
 
-import { getAll, createPerson } from "./services/persons"
+import { getAll, createPerson, deletePerson } from "./services/persons"
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -14,7 +14,7 @@ const App = () => {
 
   useEffect(() => {
     getAll().then((response) => setPersons(response.data))
-  }, [])
+  }, [persons])
 
   const handleSubmit = (event) => {
     event.preventDefault()
@@ -44,6 +44,19 @@ const App = () => {
     }
   }
 
+  const handleDelete = (id) => {
+    const findPerson = persons.find((person) => person.id === id)
+
+    console.log(id)
+
+    if (window.confirm(`Delete ${findPerson.name}`)) {
+      const updatedPersons = persons.filter((person) => person.id !== id)
+
+      setPersons(updatedPersons)
+      deletePerson(id)
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -58,7 +71,11 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <Persons filteredPersons={filteredPersons} persons={persons} />
+      <Persons
+        filteredPersons={filteredPersons}
+        persons={persons}
+        handleClick={handleDelete}
+      />
     </div>
   )
 }

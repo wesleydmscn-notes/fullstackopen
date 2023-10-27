@@ -12,12 +12,14 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("")
   const [filteredPersons, setFilteredPersons] = useState(null)
 
+  const baseurl = "http://localhost:3001"
+
   useEffect(() => {
     const eventHandler = response => {
       setPersons(response.data)
     }
 
-    const promise = axios.get("http://localhost:3001/persons")
+    const promise = axios.get(`${baseurl}/persons`)
     
     promise.then(eventHandler)
   }, [])
@@ -30,8 +32,12 @@ const App = () => {
     if (exists) {
       alert(`${newName} is already added to phonebook`)
     } else if (newName !== "" && newNumber !== "") {
+      const newPerson = { name: newName, number: newNumber }
+      
+      axios.post(`${baseurl}/persons`, newPerson)
+
       setPersons((current) =>
-        current.concat({ name: newName, number: newNumber })
+        current.concat(newPerson)
       )
     }
   }

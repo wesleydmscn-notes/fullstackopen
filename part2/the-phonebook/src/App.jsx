@@ -1,27 +1,19 @@
-import axios from "axios"
 import { useEffect, useState } from "react"
 
 import { Filter } from "./components/Filter"
 import { PersonForm } from "./components/PersonForm"
 import { Persons } from "./components/Persons"
 
+import { getAll, createPerson } from "./services/persons"
+
 const App = () => {
   const [persons, setPersons] = useState([])
-
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [filteredPersons, setFilteredPersons] = useState(null)
 
-  const baseurl = "http://localhost:3001"
-
   useEffect(() => {
-    const eventHandler = response => {
-      setPersons(response.data)
-    }
-
-    const promise = axios.get(`${baseurl}/persons`)
-    
-    promise.then(eventHandler)
+    getAll().then((response) => setPersons(response.data))
   }, [])
 
   const handleSubmit = (event) => {
@@ -33,12 +25,9 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
     } else if (newName !== "" && newNumber !== "") {
       const newPerson = { name: newName, number: newNumber }
-      
-      axios.post(`${baseurl}/persons`, newPerson)
 
-      setPersons((current) =>
-        current.concat(newPerson)
-      )
+      createPerson(newPerson)
+      setPersons((current) => current.concat(newPerson))
     }
   }
 

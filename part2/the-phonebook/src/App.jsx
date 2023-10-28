@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Filter } from "./components/Filter"
 import { PersonForm } from "./components/PersonForm"
 import { Persons } from "./components/Persons"
+import { Notification } from "./components/Notification"
 
 import {
   getAll,
@@ -16,6 +17,7 @@ const App = () => {
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
   const [filteredPersons, setFilteredPersons] = useState(null)
+  const [successfulMessage, setSuccessfulMessage] = useState(null)
 
   useEffect(() => {
     getAll().then((response) => setPersons(response.data))
@@ -55,6 +57,9 @@ const App = () => {
 
       createPerson(newPerson).then((response) => {
         setPersons((current) => current.concat(response.data))
+
+        setSuccessfulMessage(`Added ${newName}`)
+        setTimeout(() => setSuccessfulMessage(null), 3000)
       })
     }
   }
@@ -87,6 +92,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={successfulMessage} />
 
       <Filter handleChange={handleChange} />
 

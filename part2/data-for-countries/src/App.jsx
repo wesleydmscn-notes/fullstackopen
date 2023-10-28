@@ -8,6 +8,7 @@ import { getAllCountries } from "./services/fetchCountries"
 const App = () => {
   const [countries, setCountries] = useState(null)
   const [filteredCountries, setFilteredCountries] = useState([])
+  const [showCountry, setShowCountry] = useState("")
 
   useEffect(() => {
     getAllCountries().then((data) => setCountries(data))
@@ -21,7 +22,7 @@ const App = () => {
         country.name.common.includes(value)
       )
 
-      setFilteredCountries(foundCountries)
+      foundCountries.length < 10 && setFilteredCountries(foundCountries)
     }
   }
 
@@ -30,12 +31,23 @@ const App = () => {
       <FilterBar handleChange={handleChange} />
 
       {filteredCountries.length === 1 ? (
-        filteredCountries.map((country, i) => <CountryInfo key={`${country.name.common}-${i}`} country={country} />)
-      ) : filteredCountries.length > 10 ? (
-        <p>Too many matches, specify another filter</p>
+        <CountryInfo
+          key={`${filteredCountries[0].name.common}`}
+          country={filteredCountries[0]}
+        />
       ) : (
-        filteredCountries.map((country, i) => <p key={`${country.name.official}-${i}`}>{country.name.common}</p>)
+        filteredCountries.map((country, i) => (
+          <div key={`${country.name.official}-${i}`}>
+            <span>{country.name.common} </span>
+            <button onClick={() => setShowCountry(country.name.common)}>
+              show
+            </button>
+
+            {showCountry === country.name.common && <CountryInfo country={country} />}
+          </div>
+        ))
       )}
+
     </>
   )
 }

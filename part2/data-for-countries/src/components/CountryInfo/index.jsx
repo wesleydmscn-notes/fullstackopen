@@ -17,7 +17,7 @@ export const CountryInfo = ({ country }) => {
         ))}
       </ul>
 
-      <img src={flags.png} alt={flags.alt} />
+      <img width={350} src={flags.svg} alt={flags.alt} />
     </div>
   )
 }

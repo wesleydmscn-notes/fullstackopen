@@ -3,7 +3,10 @@ import { useEffect, useState } from "react"
 import { Filter } from "./components/Filter"
 import { PersonForm } from "./components/PersonForm"
 import { Persons } from "./components/Persons"
-import { Notification } from "./components/Notification"
+import {
+  NotificationSuccess,
+  NotificationError,
+} from "./components/Notification"
 
 import {
   getAll,
@@ -18,6 +21,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("")
   const [filteredPersons, setFilteredPersons] = useState(null)
   const [successfulMessage, setSuccessfulMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     getAll().then((response) => setPersons(response.data))
@@ -41,14 +45,21 @@ const App = () => {
       if (result) {
         const newData = { name: targetPerson.name, number: newNumber }
 
-        updatePerson(targetPerson.id, newData).then((response) => {
-          const newData = persons.map((person) =>
-            person.id === response.data.id ? response.data : person
-          )
+        updatePerson(targetPerson.id, newData)
+          .then((response) => {
+            const newData = persons.map((person) =>
+              person.id === response.data.id ? response.data : person
+            )
 
-          setPersons(newData)
-          setFilteredPersons(null)
-        })
+            setPersons(newData)
+            setFilteredPersons(null)
+          })
+          .catch((_error) => {
+            setErrorMessage(
+              `Information of ${newName} hss already been removed from server`
+            )
+            setTimeout(() => setErrorMessage(null), 3000)
+          })
       }
     } else if (targetPerson && targetPerson.name) {
       alert(`${newName} is already added to phonebook`)
@@ -93,7 +104,11 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Notification message={successfulMessage} />
+      {successfulMessage ? (
+        <NotificationSuccess message={successfulMessage} />
+      ) : (
+        errorMessage && <NotificationError message={errorMessage} />
+      )}
 
       <Filter handleChange={handleChange} />
 

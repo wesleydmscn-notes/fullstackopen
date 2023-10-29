@@ -1,0 +1,14 @@
+.message-notification {
+  padding: 16px;
+  background-color: #eee;
+}
+
+.message-notification.success {
+  color: green;
+  border: 2px solid green;
+}
+
+.message-notification.error {
+  color: red;
+  border: 2px solid red;
+}

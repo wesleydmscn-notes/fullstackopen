@@ -43,11 +43,12 @@ const App = () => {
               show
             </button>
 
-            {showCountry === country.name.common && <CountryInfo country={country} />}
+            {showCountry === country.name.common && (
+              <CountryInfo country={country} />
+            )}
           </div>
         ))
       )}
-
     </>
   )
 }

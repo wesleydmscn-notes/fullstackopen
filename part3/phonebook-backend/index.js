@@ -34,12 +34,16 @@ app.get("/info", (req, res) => {
 app.post("/api/persons", (req, res) => {
   const { name, number } = req.body
 
-  if (name && number) {
-    phonebook = phonebook.concat({ id: uniqID(phonebook), name, number })
-    return res.status(201).end()
-  }
+  if (!name) return res.status(400).json({ error: "'name' key is missing" })
+  if (!number) return res.status(400).json({ error: "'number' key is missing" })
 
-  return res.status(500).end()
+  const exists = phonebook.find((person) => person.name === name)
+
+  if (exists) return res.status(400).json({ error: "name must be unique" })
+
+  phonebook = phonebook.concat({ id: uniqID(phonebook), name, number })
+
+  return res.status(201).end()
 })
 
 app.delete("/api/persons/:id", (req, res) => {

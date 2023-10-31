@@ -4,3 +4,13 @@ GET {{baseurl}}/api/persons
 
 ###
 DELETE {{baseurl}}/api/persons/1
+
+###
+
+POST {{baseurl}}/api/persons
+Content-Type: application/json
+
+{
+  "name": "Wesley Damasceno",
+  "number": "12-43-234345"
+}

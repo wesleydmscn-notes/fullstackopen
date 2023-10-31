@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express()
 
-let { phonebook } = require("./db")
+let { phonebook, uniqID } = require("./db")
 
 app.use(express.json())
 
@@ -29,6 +29,17 @@ app.get("/info", (req, res) => {
   `
 
   res.send(html)
+})
+
+app.post("/api/persons", (req, res) => {
+  const { name, number } = req.body
+
+  if (name && number) {
+    phonebook = phonebook.concat({ id: uniqID(phonebook), name, number })
+    return res.status(201).end()
+  }
+
+  return res.status(500).end()
 })
 
 app.delete("/api/persons/:id", (req, res) => {

@@ -21,6 +21,11 @@ let phonebook = [
   },
 ]
 
+function uniqID(database) {
+  return Math.floor(Math.random() * (database.length * Math.PI))
+}
+
 module.exports = {
   phonebook,
+  uniqID
 }

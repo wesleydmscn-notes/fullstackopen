@@ -5,8 +5,18 @@ const app = express()
 
 let { phonebook, uniqID } = require("./db")
 
+morgan.token("body", function getBody(req) {
+  if (req.body && req.body.name && req.body.number) {
+    return JSON.stringify(req.body)
+  }
+
+  return " "
+})
+
 app.use(express.json())
-app.use(morgan("tiny"))
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+)
 
 app.get("/", (req, res) => res.send("Hello World!"))
 

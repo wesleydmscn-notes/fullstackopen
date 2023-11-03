@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "node --watch --trace-warnings index.js"
+    "dev": "node --watch --trace-warnings index.js",
+    "build:ui": "rm -rf dist && cd ../../part2/the-phonebook/ && npm run build && cp -r dist ../../part3/phonebook-backend",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
   "author": "Wesley Damasceno",
   "license": "MIT",

@@ -2,6 +2,8 @@ const express = require("express")
 const morgan = require("morgan")
 const cors = require("cors")
 
+require("dotenv").config()
+
 const app = express()
 
 let { phonebook, uniqID } = require("./db")
@@ -73,6 +75,8 @@ app.delete("/api/persons/:id", (req, res) => {
   return res.status(404).end()
 })
 
-app.listen(3001, () => {
-  console.log("Server is running at port", 3001)
+const PORT = process.env.PORT || 3001
+
+app.listen(PORT, () => {
+  console.log("Server is running at port", PORT)
 })

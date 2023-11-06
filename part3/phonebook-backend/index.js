@@ -7,6 +7,7 @@ require("dotenv").config()
 const app = express()
 
 let { phonebook, uniqID } = require("./db")
+const Person = require("./models/person")
 
 morgan.token("body", function getBody(req) {
   if (req.body && req.body.name && req.body.number) {
@@ -27,7 +28,9 @@ app.use(express.static("dist"))
 app.get("/", (req, res) => res.send("Hello World!"))
 
 app.get("/api/persons", (req, res) => {
-  res.json(phonebook)
+  Person.find({}).then(result => {
+    res.json(result)
+  })
 })
 
 app.get("/api/persons/:id", (req, res) => {

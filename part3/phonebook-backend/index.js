@@ -16,36 +16,48 @@ morgan.token("body", function getBody(req) {
   return " "
 })
 
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message)
+
+  if (error.name === "CastError") {
+    return res.status(400).send({ error: "malformatted id" })
+  }
+
+  next(error)
+}
+
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: "unknown endpoint" })
+}
+
 app.use(cors())
+app.use(express.static("dist"))
 app.use(express.json())
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 )
 
-app.use(express.static("dist"))
-
 app.get("/", (req, res) => res.send("Hello World!"))
 
-app.get("/api/persons", (req, res) => {
-  Person.find({}).then((result) => {
-    res.json(result)
-  })
+app.get("/api/persons", (req, res, next) => {
+  Person.find({})
+    .then((result) => {
+      res.json(result)
+    })
+    .catch((error) => next(error))
 })
 
 app.get("/api/persons/:id", (req, res) => {
   const { id } = req.params
   Person.findById(id)
     .then((person) => res.json(person))
-    .catch((_error) => {
-      res.status(404).json({ message: "This person not exists in database" })
-    })
+    .catch((error) => next(error))
 })
 
 app.get("/info", (req, res) => {
   const html = `
   <p>Phonebook has info for ${phonebook.length} people</p>
-  <p>${new Date()}</p>
-  `
+  <p>${new Date()}</p>`
 
   res.send(html)
 })
@@ -58,12 +70,15 @@ app.post("/api/persons", (req, res) => {
 
   const newPerson = new Person({
     name,
-    number
+    number,
   })
 
-  newPerson.save().then((savedPerson) => {
-    res.status(201).json(savedPerson)
-  })
+  newPerson
+    .save()
+    .then((savedPerson) => {
+      res.status(201).json(savedPerson)
+    })
+    .catch((error) => next(error))
 })
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -77,6 +92,9 @@ app.delete("/api/persons/:id", (req, res) => {
 
   return res.status(404).end()
 })
+
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 

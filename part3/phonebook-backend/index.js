@@ -81,6 +81,19 @@ app.post("/api/persons", (req, res) => {
     .catch((error) => next(error))
 })
 
+app.put("/api/persons/:id", (req, res, next) => {
+  const { id } = req.params
+  const { number } = req.body
+
+  if (!number) return res.status(400).json({ error: "'number' key is missing" })
+
+  Person.findByIdAndUpdate(id, { number })
+    .then((personUpdated) => {
+      res.status(201).end()
+    })
+    .catch((error) => next(error))
+})
+
 app.delete("/api/persons/:id", (req, res, next) => {
   const { id } = req.params
 

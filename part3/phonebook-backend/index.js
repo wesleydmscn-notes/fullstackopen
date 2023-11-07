@@ -6,7 +6,6 @@ require("dotenv").config()
 
 const app = express()
 
-let { phonebook, uniqID } = require("./db")
 const Person = require("./models/person")
 
 morgan.token("body", function getBody(req) {
@@ -28,20 +27,18 @@ app.use(express.static("dist"))
 app.get("/", (req, res) => res.send("Hello World!"))
 
 app.get("/api/persons", (req, res) => {
-  Person.find({}).then(result => {
+  Person.find({}).then((result) => {
     res.json(result)
   })
 })
 
 app.get("/api/persons/:id", (req, res) => {
   const { id } = req.params
-  const target = phonebook.find((person) => person.id === Number(id))
-
-  if (target) {
-    return res.json(target)
-  }
-
-  return res.status(404).end()
+  Person.findById(id)
+    .then((person) => res.json(person))
+    .catch((_error) => {
+      res.status(404).json({ message: "This person not exists in database" })
+    })
 })
 
 app.get("/info", (req, res) => {
@@ -59,13 +56,14 @@ app.post("/api/persons", (req, res) => {
   if (!name) return res.status(400).json({ error: "'name' key is missing" })
   if (!number) return res.status(400).json({ error: "'number' key is missing" })
 
-  const exists = phonebook.find((person) => person.name === name)
+  const newPerson = new Person({
+    name,
+    number
+  })
 
-  if (exists) return res.status(400).json({ error: "name must be unique" })
-
-  phonebook = phonebook.concat({ id: uniqID(phonebook), name, number })
-
-  return res.status(201).end()
+  newPerson.save().then((savedPerson) => {
+    res.status(201).json(savedPerson)
+  })
 })
 
 app.delete("/api/persons/:id", (req, res) => {

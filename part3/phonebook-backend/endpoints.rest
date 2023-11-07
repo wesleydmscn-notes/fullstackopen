@@ -3,6 +3,11 @@
 GET {{baseurl}}/api/persons
 
 ###
+
+GET {{baseurl}}/api/persons/654940223a84ed64b046061e
+
+###
+
 DELETE {{baseurl}}/api/persons/1
 
 ###

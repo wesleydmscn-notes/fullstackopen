@@ -81,16 +81,14 @@ app.post("/api/persons", (req, res) => {
     .catch((error) => next(error))
 })
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete("/api/persons/:id", (req, res, next) => {
   const { id } = req.params
-  const target = phonebook.find((person) => person.id === Number(id))
 
-  if (target) {
-    phonebook = phonebook.filter((person) => person.id !== Number(id))
-    return res.status(204).end()
-  }
-
-  return res.status(404).end()
+  Person.findByIdAndDelete(id)
+    .then((result) => {
+      res.status(204).end()
+    })
+    .catch((error) => next(error))
 })
 
 app.use(unknownEndpoint)

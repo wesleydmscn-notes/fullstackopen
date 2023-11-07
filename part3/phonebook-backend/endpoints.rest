@@ -8,7 +8,7 @@ GET {{baseurl}}/api/persons/654a67be6334b399500db2ef
 
 ###
 
-DELETE {{baseurl}}/api/persons/1
+DELETE {{baseurl}}/api/persons/654940223a84ed64b046061e
 
 ###
 

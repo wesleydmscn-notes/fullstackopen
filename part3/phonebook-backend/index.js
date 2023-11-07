@@ -54,12 +54,14 @@ app.get("/api/persons/:id", (req, res) => {
     .catch((error) => next(error))
 })
 
-app.get("/info", (req, res) => {
-  const html = `
-  <p>Phonebook has info for ${phonebook.length} people</p>
-  <p>${new Date()}</p>`
+app.get("/info", (req, res, next) => {
+  Person.countDocuments({}).then(result => {
+    const html = `
+    <p>Phonebook has info for ${result} people</p>
+    <p>${new Date()}</p>`
 
-  res.send(html)
+    res.send(html)
+  }).catch((error) => next(error))
 })
 
 app.post("/api/persons", (req, res) => {

@@ -6,7 +6,7 @@ require("dotenv").config()
 
 const app = express()
 
-let { phonebook, uniqID } = require("./db")
+const Person = require("./models/person")
 
 morgan.token("body", function getBody(req) {
   if (req.body && req.body.name && req.body.number) {
@@ -16,38 +16,52 @@ morgan.token("body", function getBody(req) {
   return " "
 })
 
+const errorHandler = (error, req, res, next) => {
+  console.error(error.message)
+
+  if (error.name === "CastError") {
+    return res.status(400).send({ error: "malformatted id" })
+  }
+
+  next(error)
+}
+
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: "unknown endpoint" })
+}
+
 app.use(cors())
+app.use(express.static("dist"))
 app.use(express.json())
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 )
 
-app.use(express.static("dist"))
-
 app.get("/", (req, res) => res.send("Hello World!"))
 
-app.get("/api/persons", (req, res) => {
-  res.json(phonebook)
+app.get("/api/persons", (req, res, next) => {
+  Person.find({})
+    .then((result) => {
+      res.json(result)
+    })
+    .catch((error) => next(error))
 })
 
 app.get("/api/persons/:id", (req, res) => {
   const { id } = req.params
-  const target = phonebook.find((person) => person.id === Number(id))
-
-  if (target) {
-    return res.json(target)
-  }
-
-  return res.status(404).end()
+  Person.findById(id)
+    .then((person) => res.json(person))
+    .catch((error) => next(error))
 })
 
-app.get("/info", (req, res) => {
-  const html = `
-  <p>Phonebook has info for ${phonebook.length} people</p>
-  <p>${new Date()}</p>
-  `
+app.get("/info", (req, res, next) => {
+  Person.countDocuments({}).then(result => {
+    const html = `
+    <p>Phonebook has info for ${result} people</p>
+    <p>${new Date()}</p>`
 
-  res.send(html)
+    res.send(html)
+  }).catch((error) => next(error))
 })
 
 app.post("/api/persons", (req, res) => {
@@ -56,26 +70,44 @@ app.post("/api/persons", (req, res) => {
   if (!name) return res.status(400).json({ error: "'name' key is missing" })
   if (!number) return res.status(400).json({ error: "'number' key is missing" })
 
-  const exists = phonebook.find((person) => person.name === name)
+  const newPerson = new Person({
+    name,
+    number,
+  })
 
-  if (exists) return res.status(400).json({ error: "name must be unique" })
-
-  phonebook = phonebook.concat({ id: uniqID(phonebook), name, number })
-
-  return res.status(201).end()
+  newPerson
+    .save()
+    .then((savedPerson) => {
+      res.status(201).json(savedPerson)
+    })
+    .catch((error) => next(error))
 })
 
-app.delete("/api/persons/:id", (req, res) => {
+app.put("/api/persons/:id", (req, res, next) => {
   const { id } = req.params
-  const target = phonebook.find((person) => person.id === Number(id))
+  const { number } = req.body
 
-  if (target) {
-    phonebook = phonebook.filter((person) => person.id !== Number(id))
-    return res.status(204).end()
-  }
+  if (!number) return res.status(400).json({ error: "'number' key is missing" })
 
-  return res.status(404).end()
+  Person.findByIdAndUpdate(id, { number })
+    .then((personUpdated) => {
+      res.status(201).end()
+    })
+    .catch((error) => next(error))
 })
+
+app.delete("/api/persons/:id", (req, res, next) => {
+  const { id } = req.params
+
+  Person.findByIdAndDelete(id)
+    .then((result) => {
+      res.status(204).end()
+    })
+    .catch((error) => next(error))
+})
+
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 

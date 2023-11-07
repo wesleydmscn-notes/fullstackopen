@@ -3,7 +3,12 @@
 GET {{baseurl}}/api/persons
 
 ###
-DELETE {{baseurl}}/api/persons/1
+
+GET {{baseurl}}/api/persons/654a67be6334b399500db2ef
+
+###
+
+DELETE {{baseurl}}/api/persons/654940223a84ed64b046061e
 
 ###
 
@@ -13,4 +18,13 @@ Content-Type: application/json
 {
   "name": "Wesley Damasceno",
   "number": "12-43-234345"
+}
+
+### 
+
+PUT {{baseurl}}/api/persons/654a67be6334b399500db2ef
+Content-Type: application/json
+
+{
+  "number": "4002-8922"
 }

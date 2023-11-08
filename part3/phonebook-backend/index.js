@@ -21,6 +21,8 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === "CastError") {
     return res.status(400).send({ error: "malformatted id" })
+  } else if (error.name === "ValidationError") {
+    return res.status(400).json({ error: error.message })
   }
 
   next(error)
@@ -55,16 +57,18 @@ app.get("/api/persons/:id", (req, res) => {
 })
 
 app.get("/info", (req, res, next) => {
-  Person.countDocuments({}).then(result => {
-    const html = `
+  Person.countDocuments({})
+    .then((result) => {
+      const html = `
     <p>Phonebook has info for ${result} people</p>
     <p>${new Date()}</p>`
 
-    res.send(html)
-  }).catch((error) => next(error))
+      res.send(html)
+    })
+    .catch((error) => next(error))
 })
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const { name, number } = req.body
 
   if (!name) return res.status(400).json({ error: "'name' key is missing" })
@@ -89,8 +93,12 @@ app.put("/api/persons/:id", (req, res, next) => {
 
   if (!number) return res.status(400).json({ error: "'number' key is missing" })
 
-  Person.findByIdAndUpdate(id, { number })
-    .then((personUpdated) => {
+  Person.findByIdAndUpdate(
+    id,
+    { number },
+    { new: true, runValidators: true, context: "query" }
+  )
+    .then((_personUpdated) => {
       res.status(201).end()
     })
     .catch((error) => next(error))
@@ -100,7 +108,7 @@ app.delete("/api/persons/:id", (req, res, next) => {
   const { id } = req.params
 
   Person.findByIdAndDelete(id)
-    .then((result) => {
+    .then((_result) => {
       res.status(204).end()
     })
     .catch((error) => next(error))

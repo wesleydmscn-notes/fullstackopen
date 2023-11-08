@@ -49,7 +49,7 @@ app.get("/api/persons", (req, res, next) => {
     .catch((error) => next(error))
 })
 
-app.get("/api/persons/:id", (req, res) => {
+app.get("/api/persons/:id", (req, res, next) => {
   const { id } = req.params
   Person.findById(id)
     .then((person) => res.json(person))
@@ -98,7 +98,7 @@ app.put("/api/persons/:id", (req, res, next) => {
     { number },
     { new: true, runValidators: true, context: "query" }
   )
-    .then((_personUpdated) => {
+    .then(() => {
       res.status(201).end()
     })
     .catch((error) => next(error))
@@ -108,7 +108,7 @@ app.delete("/api/persons/:id", (req, res, next) => {
   const { id } = req.params
 
   Person.findByIdAndDelete(id)
-    .then((_result) => {
+    .then(() => {
       res.status(204).end()
     })
     .catch((error) => next(error))

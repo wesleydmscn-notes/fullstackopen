@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch --trace-warnings index.js",
+    "lint": "eslint .",
     "build:ui": "rm -rf dist && cd ../../part2/the-phonebook/ && npm run build && cp -r dist ../../part3/phonebook-backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   },
@@ -16,5 +17,8 @@
     "express": "^4.18.2",
     "mongoose": "^8.0.0",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.53.0"
   }
 }

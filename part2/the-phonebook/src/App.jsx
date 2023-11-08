@@ -66,12 +66,17 @@ const App = () => {
     } else if (newName !== "" && newNumber !== "") {
       const newPerson = { name: newName, number: newNumber }
 
-      createPerson(newPerson).then((response) => {
-        setPersons((current) => current.concat(response.data))
+      createPerson(newPerson)
+        .then((response) => {
+          setPersons((current) => current.concat(response.data))
 
-        setSuccessfulMessage(`Added ${newName}`)
-        setTimeout(() => setSuccessfulMessage(null), 3000)
-      })
+          setSuccessfulMessage(`Added ${newName}`)
+          setTimeout(() => setSuccessfulMessage(null), 3000)
+        })
+        .catch((error) => {
+          setErrorMessage(error.response.data.error)
+          setTimeout(() => setErrorMessage(null), 3000)
+        })
     }
   }
 

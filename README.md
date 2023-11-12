@@ -8,7 +8,7 @@ applications with ReactJS that use REST APIs built with Node.js.
 
 `React` `TypeScript` `Node.js` `Express` `Redux` `GraphQL` `React Native` `CI/CD` `Docker` `PostgreSQL`
 
-## Course
+## [Course Content](https://github.com/orgs/wesleydmscn-docs/projects/4)
 
 |                                   Part                                    | Content                                                                                            | Description                                                                                                                                                                                                 |
 | :-----------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

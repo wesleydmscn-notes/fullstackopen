@@ -27,11 +27,30 @@ const favoriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
   try {
     const target = lodash.maxBy(blogs, (blog) => blog.author)
-    const quantity = blogs.filter((blog) => blog.author === target.author).length
+    const quantity = blogs.filter(
+      (blog) => blog.author === target.author
+    ).length
 
     return {
       author: target.author,
       blogs: quantity,
+    }
+  } catch (error) {
+    return {}
+  }
+}
+
+const mostLikes = (blogs) => {
+  try {
+    const target = lodash.maxBy(blogs, (blog) => blog.likes)
+    const quantity = blogs.reduce((prev, curr) => {
+      const condition = curr.author === target.author
+      return condition ? curr.likes + prev : prev
+    }, 0)
+
+    return {
+      author: target.author,
+      likes: quantity,
     }
   } catch (error) {
     return {}
@@ -43,4 +62,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 }

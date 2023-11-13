@@ -1,0 +1,15 @@
+@baseurl = http://localhost:3003
+
+GET {{baseurl}}/api/blogs
+
+###
+
+POST {{baseurl}}/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Criando um blog com Express",
+  "author": "Wesley Damasceno",
+  "url": "https://wesleydmscn.co/blog/criando-um-blog-com-express",
+  "likes": 0
+}

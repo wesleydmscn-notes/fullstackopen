@@ -1,3 +1,5 @@
+const lodash = require("lodash")
+
 const dummy = () => {
   return 1
 }
@@ -15,7 +17,21 @@ const favoriteBlog = (blogs) => {
     return {
       title: result.title,
       author: result.author,
-      likes: result.likes
+      likes: result.likes,
+    }
+  } catch (error) {
+    return {}
+  }
+}
+
+const mostBlogs = (blogs) => {
+  try {
+    const target = lodash.maxBy(blogs, (blog) => blog.author)
+    const quantity = blogs.filter((blog) => blog.author === target.author).length
+
+    return {
+      author: target.author,
+      blogs: quantity,
     }
   } catch (error) {
     return {}
@@ -26,4 +42,5 @@ module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
+  mostBlogs,
 }

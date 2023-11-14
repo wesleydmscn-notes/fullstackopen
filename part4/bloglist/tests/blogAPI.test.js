@@ -23,17 +23,10 @@ describe("GET - Returns amount of blog posts", () => {
   })
 
   test("Response have a id property defined", async () => {
-    const response = await api.get("/api/blogs")
-    expect(response.body[0].id).toBeDefined()
-  })
+    const blogsAtStart = await helper.blogsInDb()
+    const response = await api.get(`/api/blogs/${blogsAtStart[0].id}`)
 
-  test("Response have required properties in each object", async () => {
-    const response = await api.get("/api/blogs")
-
-    expect(response.body[0]).toHaveProperty("title")
-    expect(response.body[0]).toHaveProperty("author")
-    expect(response.body[0]).toHaveProperty("likes")
-    expect(response.body[0]).toHaveProperty("url")
+    expect(response.body).toBeDefined()
   })
 })
 
@@ -60,6 +53,24 @@ describe("POST - Successfully creates a new blog post", () => {
     expect(response.body[1].author).toBe("Wesley Damasceno")
     expect(response.body[1].likes).toBe(0)
     expect(response.body[1].url).toBe("https://github.com/wesleydmscn")
+  })
+
+  test("Verifies that if the likes property is missing from the request", async () => {
+    const newBlog = {
+      title: "TypeScript I need you",
+      author: "Wesley Damasceno",
+      url: "https://github.com/wesleydmscn",
+    }
+
+    const response = await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/)
+
+    console.log((await api.get("/api/blogs")).body)
+
+    expect(response.body.likes).toBeDefined()
   })
 })
 

@@ -26,7 +26,7 @@ describe("GET - Returns amount of blog posts", () => {
     const blogsAtStart = await helper.blogsInDb()
     const response = await api.get(`/api/blogs/${blogsAtStart[0].id}`)
 
-    expect(response.body).toBeDefined()
+    expect(response.body.id).toBeDefined()
   })
 })
 
@@ -89,6 +89,13 @@ describe("POST - Successfully creates a new blog post", () => {
     }
 
     await api.post("/api/blogs").send(newBlog).expect(400)
+  })
+})
+
+describe("DELETE - Successfully delete a blog post", () => {
+  test("Delete blog post by id", async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    await api.delete(`/api/blogs/${blogsAtStart[0].id}`).expect(202)
   })
 })
 

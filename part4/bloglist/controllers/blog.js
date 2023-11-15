@@ -6,6 +6,12 @@ blogRouter.get("/api/blogs", async (request, response) => {
   response.json(blogResponse)
 })
 
+blogRouter.get("/api/blogs/:id", async (request, response) => {
+  const { id } = request.params
+  const blogResponse = await Blog.findOne({ _id: id })
+  response.json(blogResponse)
+})
+
 blogRouter.post("/api/blogs", async (request, response) => {
   const { title, author, likes, url } = request.body
 
@@ -17,6 +23,12 @@ blogRouter.post("/api/blogs", async (request, response) => {
   const blogResponse = await blog.save()
 
   response.status(201).json(blogResponse)
+})
+
+blogRouter.delete("/api/blogs/:id", async (request, response) => {
+  const { id } = request.params
+  await Blog.findByIdAndDelete(id)
+  response.status(202).end()
 })
 
 module.exports = blogRouter

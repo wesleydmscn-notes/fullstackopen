@@ -68,9 +68,27 @@ describe("POST - Successfully creates a new blog post", () => {
       .expect(201)
       .expect("Content-Type", /application\/json/)
 
-    console.log((await api.get("/api/blogs")).body)
-
     expect(response.body.likes).toBeDefined()
+  })
+
+  test("Verifies that if the title property is missing from the request", async () => {
+    const newBlog = {
+      author: "Wesley Damasceno",
+      url: "https://github.com/wesleydmscn",
+      likes: 2,
+    }
+
+    await api.post("/api/blogs").send(newBlog).expect(400)
+  })
+
+  test("Verifies that if the url property is missing from the request", async () => {
+    const newBlog = {
+      title: "Python I need you",
+      author: "Wesley Damasceno",
+      likes: 1,
+    }
+
+    await api.post("/api/blogs").send(newBlog).expect(400)
   })
 })
 

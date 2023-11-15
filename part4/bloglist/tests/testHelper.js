@@ -7,6 +7,12 @@ const initialBlogs = [
     likes: 0,
     url: "https://github.com/wesleydmscn",
   },
+  {
+    title: "React patterns",
+    author: "Michael Chan",
+    likes: 7,
+    url: "https://reactpatterns.com/",
+  },
 ]
 
 const nonExistingId = async () => {

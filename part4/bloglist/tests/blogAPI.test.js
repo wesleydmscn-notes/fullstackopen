@@ -10,16 +10,17 @@ const api = supertest(app)
 beforeEach(async () => {
   await Blog.deleteMany({})
 
-  const newBlog = new Blog(helper.initialBlogs[0])
-
-  await newBlog.save()
+  for (const initialBlog of helper.initialBlogs) {
+    const newBlog = new Blog(initialBlog)
+    await newBlog.save()
+  }
 })
 
 describe("GET - Returns amount of blog posts", () => {
   test("Response have length equal one and status code 200", async () => {
     const response = await api.get("/api/blogs")
     expect(response.statusCode).toBe(200)
-    expect(response.body).toHaveLength(1)
+    expect(response.body).toHaveLength(2)
   })
 
   test("Response have a id property defined", async () => {
@@ -49,10 +50,10 @@ describe("POST - Successfully creates a new blog post", () => {
 
     expect(response.body).toHaveLength(helper.initialBlogs.length + 1)
 
-    expect(response.body[1].title).toBe("Another blog post")
-    expect(response.body[1].author).toBe("Wesley Damasceno")
-    expect(response.body[1].likes).toBe(0)
-    expect(response.body[1].url).toBe("https://github.com/wesleydmscn")
+    expect(response.body[2].title).toBe("Another blog post")
+    expect(response.body[2].author).toBe("Wesley Damasceno")
+    expect(response.body[2].likes).toBe(0)
+    expect(response.body[2].url).toBe("https://github.com/wesleydmscn")
   })
 
   test("Verifies that if the likes property is missing from the request", async () => {
@@ -96,6 +97,21 @@ describe("DELETE - Successfully delete a blog post", () => {
   test("Delete blog post by id", async () => {
     const blogsAtStart = await helper.blogsInDb()
     await api.delete(`/api/blogs/${blogsAtStart[0].id}`).expect(202)
+  })
+})
+
+describe("PUT - Successfully update a blog post", () => {
+  test("Update blog post by id", async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const fieldsToUpdate = {
+      title: "Hello World!",
+      likes: 2,
+    }
+
+    await api
+      .put(`/api/blogs/${blogsAtStart[1].id}`)
+      .send(fieldsToUpdate)
+      .expect(204)
   })
 })
 

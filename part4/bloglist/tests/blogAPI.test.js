@@ -1,20 +1,55 @@
 const mongoose = require("mongoose")
 const supertest = require("supertest")
+const bcrypt = require("bcrypt")
 
 const app = require("../app")
+
 const Blog = require("../models/blog")
+const User = require("../models/user")
+
 const helper = require("./testHelper")
 
 const api = supertest(app)
 
 beforeEach(async () => {
+  await User.deleteMany({})
+
+  const passwordHash = await bcrypt.hash("12345", 10)
+  const user = new User({
+    username: "wesleydmscn",
+    name: "Wesley Damasceno",
+    blogs: [],
+    passwordHash,
+  })
+
+  await user.save()
+}, 5000)
+
+beforeEach(async () => {
   await Blog.deleteMany({})
 
-  for (const initialBlog of helper.initialBlogs) {
-    const newBlog = new Blog(initialBlog)
-    await newBlog.save()
-  }
-})
+  const users = await User.find({})
+  const user = users[0]
+
+  const blogObjects = helper.initialBlogs.map(
+    (blog) =>
+      new Blog({
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        user: user._id,
+        likes: blog.likes ? blog.likes : 0,
+      })
+  )
+
+  const arrayOfPromise = blogObjects.map((blog) => {
+    blog.save()
+    user.blogs = user.blogs.concat(blog._id)
+  })
+
+  await Promise.all(arrayOfPromise)
+  await user.save()
+}, 5000)
 
 describe("GET - Returns amount of blog posts", () => {
   test("Response have length equal one and status code 200", async () => {
@@ -40,9 +75,14 @@ describe("POST - Successfully creates a new blog post", () => {
       url: "https://github.com/wesleydmscn",
     }
 
+    const loginUser = await api
+      .post("/api/login")
+      .send({ username: "wesleydmscn", password: "12345" })
+
     await api
       .post("/api/blogs")
       .send(newBlog)
+      .set("Authorization", `Bearer ${loginUser.body.token}`)
       .expect(201)
       .expect("Content-Type", /application\/json/)
 
@@ -63,13 +103,11 @@ describe("POST - Successfully creates a new blog post", () => {
       url: "https://github.com/wesleydmscn",
     }
 
-    const response = await api
+    await api
       .post("/api/blogs")
       .send(newBlog)
-      .expect(201)
+      .expect(401)
       .expect("Content-Type", /application\/json/)
-
-    expect(response.body.likes).toBeDefined()
   })
 
   test("Verifies that if the title property is missing from the request", async () => {
@@ -95,8 +133,16 @@ describe("POST - Successfully creates a new blog post", () => {
 
 describe("DELETE - Successfully delete a blog post", () => {
   test("Delete blog post by id", async () => {
+    const loginUser = await api
+      .post("/api/login")
+      .send({ username: "wesleydmscn", password: "12345" })
+
     const blogsAtStart = await helper.blogsInDb()
-    await api.delete(`/api/blogs/${blogsAtStart[0].id}`).expect(202)
+
+    await api
+      .delete(`/api/blogs/${blogsAtStart[0].id}`)
+      .set("Authorization", `Bearer ${loginUser.body.token}`)
+      .expect(202)
   })
 })
 

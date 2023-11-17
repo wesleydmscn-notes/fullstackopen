@@ -6,10 +6,32 @@ GET {{baseurl}}/api/blogs
 
 POST {{baseurl}}/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Indlc2xleWRtc2NuIiwiaWQiOiI2NTU3ZWZjYjViZDc0NTA1ZmYzMGRmZDciLCJpYXQiOjE3MDAyNjI1MDN9.o6NAOXow7ocR2dFc1HzB9J7NyYTsSGD5jHvoSJz2tqU
 
 {
   "title": "Criando um blog com Express",
   "author": "Wesley Damasceno",
-  "url": "https://wesleydmscn.co/blog/criando-um-blog-com-express",
-  "likes": 0
+  "url": "https://wesleydmscn.co/blog/bemvindos",
+  "likes": 4
+}
+
+###
+
+POST {{baseurl}}/api/users
+Content-Type: application/json
+
+{
+	"username": "wesleydmscn",
+	"password": "12345",
+	"name": "Wesley Damasceno"
+}
+
+###
+
+POST {{baseurl}}/api/login
+Content-Type: application/json
+
+{
+	"username": "wesleydmscn",
+	"password": "12345"
 }

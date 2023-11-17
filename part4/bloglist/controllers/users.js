@@ -4,6 +4,19 @@ const User = require("../models/user")
 
 usersRouter.post("/api/users", async (request, response) => {
   const { username, password, name } = request.body
+
+  if (!password || !username) {
+    return response
+      .status(400)
+      .json({ error: "password and username must be given" })
+  }
+
+  if (password.length < 3 || username.length < 3) {
+    return response.status(400).json({
+      error: "password or username must be at least 3 characters long",
+    })
+  }
+
   const passwordHash = await bcrypt.hash(password, 10)
 
   const user = new User({
@@ -13,6 +26,7 @@ usersRouter.post("/api/users", async (request, response) => {
   })
 
   const savedUser = await user.save()
+
   response.status(201).json(savedUser)
 })
 

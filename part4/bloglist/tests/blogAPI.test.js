@@ -115,6 +115,32 @@ describe("PUT - Successfully update a blog post", () => {
   })
 })
 
+describe("POST in /api/users", () => {
+  test("Check that a user was not created with an invalid username", async () => {
+    const invalidFields = {
+      username: "we",
+      password: "12345",
+      name: "Wesley Damasceno",
+    }
+
+    const response = await api
+      .post("/api/users")
+      .send(invalidFields)
+      .expect(400)
+
+    expect(response.body).toEqual({
+      error: "password or username must be at least 3 characters long",
+    })
+  })
+
+  test("Check that a user was not created with invalid fields", async () => {
+    const response = await api.post("/api/users").send({}).expect(400)
+    expect(response.body).toEqual({
+      error: "password and username must be given",
+    })
+  })
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })

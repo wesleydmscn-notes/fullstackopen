@@ -25,7 +25,7 @@ function Login(props) {
         <div>
           <label>password</label>
           <input
-            type="text"
+            type="password"
             value={password}
             name="Password"
             onChange={handleChangePassword}

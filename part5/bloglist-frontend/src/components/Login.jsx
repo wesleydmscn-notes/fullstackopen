@@ -1,3 +1,5 @@
+import Notification from "./Notification"
+
 function Login(props) {
   const {
     handleChangeUsername,
@@ -5,11 +7,14 @@ function Login(props) {
     handleSubmit,
     username,
     password,
+    errorMessage,
   } = props
 
   return (
     <div>
       <h2>log in to application</h2>
+
+      <Notification message={errorMessage} style="error" />
 
       <form onSubmit={handleSubmit}>
         <div>

@@ -1,0 +1,20 @@
+div.error,
+div.change {
+  max-width: 450px;
+  margin: 16px 0;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: #e2e2e2;
+  border-radius: 6px;
+}
+
+.error {
+  color: red;
+  border: 2px solid red;
+}
+
+.change {
+  color: green;
+  border: 2px solid green;
+}

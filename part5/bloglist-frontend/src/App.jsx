@@ -22,7 +22,10 @@ const App = () => {
   const createBlogRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogService.getAll().then((blogs) => {
+      const sortedByLikes = (prev, curr) => (prev.likes < curr.likes ? 1 : -1)
+      setBlogs(blogs.sort(sortedByLikes))
+    })
   }, [])
 
   useEffect(() => {
@@ -117,7 +120,8 @@ const App = () => {
       return blogPost
     })
 
-    setBlogs(updatedBlog)
+    const sortedByLikes = (prev, curr) => (prev.likes < curr.likes ? 1 : -1)
+    setBlogs(updatedBlog.sort(sortedByLikes))
   }
 
   if (user === null) {

@@ -60,19 +60,6 @@ const App = () => {
     }
   }
 
-  if (user === null) {
-    return (
-      <Login
-        username={username}
-        password={password}
-        handleChangeUsername={({ target }) => setUsername(target.value)}
-        handleChangePassword={({ target }) => setPassword(target.value)}
-        handleSubmit={handleLogin}
-        errorMessage={errorMessage}
-      />
-    )
-  }
-
   const handleLogout = () => {
     localStorage.removeItem("loggedBlogappUser")
     setUser(null)
@@ -108,6 +95,44 @@ const App = () => {
     }
   }
 
+  const handleLikePost = async (blogID) => {
+    const target = blogs.find((blog) => blog.id === blogID)
+
+    await blogService.update({
+      id: target.id,
+      title: target.title,
+      author: target.author,
+      url: target.url,
+      likes: 1,
+    })
+
+    const updatedBlog = blogs.map((blogPost) => {
+      if (blogPost.id === blogID) {
+        return {
+          ...blogPost,
+          likes: blogPost.likes + 1,
+        }
+      }
+
+      return blogPost
+    })
+
+    setBlogs(updatedBlog)
+  }
+
+  if (user === null) {
+    return (
+      <Login
+        username={username}
+        password={password}
+        handleChangeUsername={({ target }) => setUsername(target.value)}
+        handleChangePassword={({ target }) => setPassword(target.value)}
+        handleSubmit={handleLogin}
+        errorMessage={errorMessage}
+      />
+    )
+  }
+
   return (
     <div>
       <h2>blogs</h2>
@@ -124,7 +149,11 @@ const App = () => {
       </Togglable>
 
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={`${blog.id}-${blog.author}`}
+          blog={blog}
+          onLikePost={async () => await handleLikePost(blog.id)}
+        />
       ))}
     </div>
   )

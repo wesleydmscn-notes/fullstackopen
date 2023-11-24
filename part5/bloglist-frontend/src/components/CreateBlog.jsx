@@ -68,4 +68,6 @@ const CreateBlog = forwardRef((props, refs) => {
   )
 })
 
+CreateBlog.displayName = "CreateBlog"
+
 export default CreateBlog

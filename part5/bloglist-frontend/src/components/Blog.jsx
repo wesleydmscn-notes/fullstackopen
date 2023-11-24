@@ -1,4 +1,5 @@
 import { useState } from "react"
+import PropTypes from "prop-types"
 
 const Blog = ({ blog, onLikePost, onDeletePost, user }) => {
   const [visible, setVisible] = useState(false)
@@ -45,7 +46,7 @@ const Blog = ({ blog, onLikePost, onDeletePost, user }) => {
         <br />
         <br />
 
-        <a href={blog.url} target="_blank">
+        <a href={blog.url} target="_blank" rel="noreferrer">
           {blog.url}
         </a>
 
@@ -59,6 +60,13 @@ const Blog = ({ blog, onLikePost, onDeletePost, user }) => {
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  onLikePost: PropTypes.func.isRequired,
+  onDeletePost: PropTypes.func.isRequired,
+  user: PropTypes.bool.isRequired,
 }
 
 export default Blog

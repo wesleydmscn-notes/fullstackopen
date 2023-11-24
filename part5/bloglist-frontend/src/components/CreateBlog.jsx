@@ -9,10 +9,10 @@ function CreateBlog(props) {
   } = props
 
   return (
-    <div>
+    <>
       <h2>create new blog:</h2>
 
-      <form onSubmit={handleSubmit} style={{ marginBottom: 16 }}>
+      <form onSubmit={handleSubmit}>
         <div>
           <label>title:</label>
           <input
@@ -55,7 +55,7 @@ function CreateBlog(props) {
 
         <button type="submit">create</button>
       </form>
-    </div>
+    </>
   )
 }
 

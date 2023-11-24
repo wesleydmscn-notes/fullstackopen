@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 import Blog from "./components/Blog"
 import Login from "./components/Login"
 import CreateBlog from "./components/CreateBlog"
 import Notification from "./components/Notification"
+import Togglable from "./components/Togglable"
 
 import blogService from "./services/blogs"
 import loginService from "./services/login"
@@ -15,15 +16,16 @@ const App = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setURL] = useState("")
-  const [likes, setLikes] = useState("")
   const [errorMessage, setErrorMessage] = useState(null)
   const [changeMessage, setChangeMessage] = useState(null)
 
+  const createBlogRef = useRef()
+
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogService.getAll().then((blogs) => {
+      const sortedByLikes = (prev, curr) => (prev.likes < curr.likes ? 1 : -1)
+      setBlogs(blogs.sort(sortedByLikes))
+    })
   }, [])
 
   useEffect(() => {
@@ -38,7 +40,6 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log("logging in with", username, password)
 
     try {
       const user = await loginService.login({
@@ -62,6 +63,84 @@ const App = () => {
     }
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem("loggedBlogappUser")
+    setUser(null)
+  }
+
+  const handleCreateBlog = async (event) => {
+    event.preventDefault()
+
+    try {
+      const { title, author, url, likes, clearFields } = createBlogRef.current
+      const returnedBlog = await blogService.create({
+        title,
+        author,
+        url,
+        likes,
+        user: user.name,
+      })
+
+      setBlogs(() => blogs.concat(returnedBlog))
+      setChangeMessage(`A new blog ${title} by ${author} added`)
+
+      clearFields()
+
+      setTimeout(() => {
+        setChangeMessage(null)
+      }, 2500)
+    } catch (exception) {
+      setErrorMessage("Something wrong, please fill in all fields correctly.")
+
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 2500)
+    }
+  }
+
+  const handleLikePost = async (blogID) => {
+    const target = blogs.find((blog) => blog.id === blogID)
+
+    await blogService.update({
+      id: target.id,
+      title: target.title,
+      author: target.author,
+      url: target.url,
+      likes: 1,
+    })
+
+    const updatedBlog = blogs.map((blogPost) => {
+      if (blogPost.id === blogID) {
+        return {
+          ...blogPost,
+          likes: blogPost.likes + 1,
+        }
+      }
+
+      return blogPost
+    })
+
+    const sortedByLikes = (prev, curr) => (prev.likes < curr.likes ? 1 : -1)
+    setBlogs(updatedBlog.sort(sortedByLikes))
+  }
+
+  const handleDeletePost = async (blogID) => {
+    const target = blogs.find((blog) => blog.id === blogID)
+    const isConfirmed = window.confirm(
+      `Remove blog '${target.title}' by '${target.author}'`
+    )
+
+    if (isConfirmed) {
+      await blogService.deletePost(blogID)
+
+      const filteredBlogs = blogs.filter(
+        (blogPost) => blogPost.id !== target.id
+      )
+
+      setBlogs(filteredBlogs)
+    }
+  }
+
   if (user === null) {
     return (
       <Login
@@ -75,44 +154,6 @@ const App = () => {
     )
   }
 
-  const handleLogout = () => {
-    localStorage.removeItem("loggedBlogappUser")
-    setUser(null)
-  }
-
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-
-    try {
-      const returnedBlog = await blogService.create({
-        title,
-        author,
-        url,
-        likes,
-        user: user.name,
-      })
-
-      setBlogs(() => blogs.concat(returnedBlog))
-      setTitle("")
-      setAuthor("")
-      setURL("")
-
-      setChangeMessage(`A new blog ${title} by ${author} added`)
-
-      setTimeout(() => {
-        setChangeMessage(null)
-      }, 2500)
-    } catch (exception) {
-      setErrorMessage(
-        "There is something wrong with the entries, please fill in all fields correctly."
-      )
-
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 2500)
-    }
-  }
-
   return (
     <div>
       <h2>blogs</h2>
@@ -124,17 +165,18 @@ const App = () => {
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
 
-      <CreateBlog
-        handleChangeTitle={({ target }) => setTitle(target.value)}
-        handleChangeAuthor={({ target }) => setAuthor(target.value)}
-        handleChangeURL={({ target }) => setURL(target.value)}
-        handleChangeLikes={({ target }) => setLikes(target.value)}
-        handleSubmit={handleCreateBlog}
-        values={{ title, author, url, likes }}
-      />
+      <Togglable buttonLabel="new blog">
+        <CreateBlog ref={createBlogRef} onSubmit={handleCreateBlog} />
+      </Togglable>
 
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={`${blog.id}-${blog.author}`}
+          blog={blog}
+          user={user.username === blog.user.username}
+          onLikePost={async () => await handleLikePost(blog.id)}
+          onDeletePost={async () => await handleDeletePost(blog.id)}
+        />
       ))}
     </div>
   )

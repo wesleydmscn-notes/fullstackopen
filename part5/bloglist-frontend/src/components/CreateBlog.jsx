@@ -1,25 +1,34 @@
-function CreateBlog(props) {
-  const {
-    handleChangeTitle,
-    handleChangeAuthor,
-    handleChangeURL,
-    handleChangeLikes,
-    handleSubmit,
-    values,
-  } = props
+import { useState, forwardRef, useImperativeHandle } from "react"
+
+const CreateBlog = forwardRef((props, refs) => {
+  const [title, setTitle] = useState("")
+  const [author, setAuthor] = useState("")
+  const [url, setURL] = useState("")
+  const [likes, setLikes] = useState("")
+
+  function clearFields() {
+    setTitle("")
+    setAuthor("")
+    setURL("")
+    setLikes("")
+  }
+
+  useImperativeHandle(refs, () => {
+    return { title, author, url, likes, clearFields }
+  })
 
   return (
     <>
       <h2>create new blog:</h2>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={props.onSubmit}>
         <div>
           <label>title:</label>
           <input
             type="text"
-            value={values.title}
+            value={title}
             name="Title"
-            onChange={handleChangeTitle}
+            onChange={({ target }) => setTitle(target.value)}
           />
         </div>
 
@@ -27,9 +36,9 @@ function CreateBlog(props) {
           <label>author:</label>
           <input
             type="text"
-            value={values.author}
+            value={author}
             name="Author"
-            onChange={handleChangeAuthor}
+            onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
 
@@ -37,9 +46,9 @@ function CreateBlog(props) {
           <label>url:</label>
           <input
             type="text"
-            value={values.url}
+            value={url}
             name="URL"
-            onChange={handleChangeURL}
+            onChange={({ target }) => setURL(target.value)}
           />
         </div>
 
@@ -47,9 +56,9 @@ function CreateBlog(props) {
           <label>likes:</label>
           <input
             type="number"
-            value={values.likes}
+            value={likes}
             name="Likes"
-            onChange={handleChangeLikes}
+            onChange={({ target }) => setLikes(target.value)}
           />
         </div>
 
@@ -57,6 +66,6 @@ function CreateBlog(props) {
       </form>
     </>
   )
-}
+})
 
 export default CreateBlog

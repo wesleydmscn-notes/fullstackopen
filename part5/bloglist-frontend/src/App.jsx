@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 import Blog from "./components/Blog"
 import Login from "./components/Login"
@@ -16,12 +16,10 @@ const App = () => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setURL] = useState("")
-  const [likes, setLikes] = useState("")
   const [errorMessage, setErrorMessage] = useState(null)
   const [changeMessage, setChangeMessage] = useState(null)
+
+  const createBlogRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -39,7 +37,6 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log("logging in with", username, password)
 
     try {
       const user = await loginService.login({
@@ -85,6 +82,7 @@ const App = () => {
     event.preventDefault()
 
     try {
+      const { title, author, url, likes, clearFields } = createBlogRef.current
       const returnedBlog = await blogService.create({
         title,
         author,
@@ -94,19 +92,15 @@ const App = () => {
       })
 
       setBlogs(() => blogs.concat(returnedBlog))
-      setTitle("")
-      setAuthor("")
-      setURL("")
-
       setChangeMessage(`A new blog ${title} by ${author} added`)
+
+      clearFields()
 
       setTimeout(() => {
         setChangeMessage(null)
       }, 2500)
     } catch (exception) {
-      setErrorMessage(
-        "There is something wrong with the entries, please fill in all fields correctly."
-      )
+      setErrorMessage("Something wrong, please fill in all fields correctly.")
 
       setTimeout(() => {
         setErrorMessage(null)
@@ -126,14 +120,7 @@ const App = () => {
       </p>
 
       <Togglable buttonLabel="new blog">
-        <CreateBlog
-          handleChangeTitle={({ target }) => setTitle(target.value)}
-          handleChangeAuthor={({ target }) => setAuthor(target.value)}
-          handleChangeURL={({ target }) => setURL(target.value)}
-          handleChangeLikes={({ target }) => setLikes(target.value)}
-          handleSubmit={handleCreateBlog}
-          values={{ title, author, url, likes }}
-        />
+        <CreateBlog ref={createBlogRef} onSubmit={handleCreateBlog} />
       </Togglable>
 
       {blogs.map((blog) => (

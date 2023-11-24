@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Blog = ({ blog, onLikePost }) => {
+const Blog = ({ blog, onLikePost, onDeletePost, user }) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? "none" : "" }
@@ -48,6 +48,14 @@ const Blog = ({ blog, onLikePost }) => {
         <a href={blog.url} target="_blank">
           {blog.url}
         </a>
+
+        <br />
+
+        {user && (
+          <button onClick={onDeletePost} style={{ marginTop: 8 }}>
+            remove
+          </button>
+        )}
       </div>
     </div>
   )

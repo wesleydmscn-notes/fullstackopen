@@ -124,6 +124,23 @@ const App = () => {
     setBlogs(updatedBlog.sort(sortedByLikes))
   }
 
+  const handleDeletePost = async (blogID) => {
+    const target = blogs.find((blog) => blog.id === blogID)
+    const isConfirmed = window.confirm(
+      `Remove blog '${target.title}' by '${target.author}'`
+    )
+
+    if (isConfirmed) {
+      await blogService.deletePost(blogID)
+
+      const filteredBlogs = blogs.filter(
+        (blogPost) => blogPost.id !== target.id
+      )
+
+      setBlogs(filteredBlogs)
+    }
+  }
+
   if (user === null) {
     return (
       <Login
@@ -156,7 +173,9 @@ const App = () => {
         <Blog
           key={`${blog.id}-${blog.author}`}
           blog={blog}
+          user={user.username === blog.user.username}
           onLikePost={async () => await handleLikePost(blog.id)}
+          onDeletePost={async () => await handleDeletePost(blog.id)}
         />
       ))}
     </div>

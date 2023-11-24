@@ -10,8 +10,6 @@ const Blog = ({ blog }) => {
     paddingTop: 8,
     paddingBottom: 8,
     paddingInline: 4,
-    borderWidth: 1,
-    border: "solid",
   }
 
   const toggleVisibility = () => {
@@ -19,19 +17,28 @@ const Blog = ({ blog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div className="blog-post" style={blogStyle}>
       <div style={hideWhenVisible}>
         {blog.title}
-        <button onClick={toggleVisibility} style={{ marginLeft: 8 }}>view</button>
+        <button onClick={toggleVisibility} style={{ marginLeft: 8 }}>
+          view
+        </button>
       </div>
 
       <div style={showWhenVisible}>
-        <p style={{ margin: 0 }}>{blog.title}</p>
+        <span>
+          {blog.title}
+          <button onClick={toggleVisibility} style={{ marginLeft: 8 }}>
+            hide
+          </button>
+        </span>
+
         <p>{blog.author}</p>
         <p>likes: {blog.likes}</p>
-        <p>{blog.url}</p>
-
-        <button onClick={toggleVisibility}>hide</button>
+        
+        <a href={blog.url} target="_blank">
+          {blog.url}
+        </a>
       </div>
     </div>
   )

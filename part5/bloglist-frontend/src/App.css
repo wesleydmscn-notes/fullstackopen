@@ -18,3 +18,7 @@ div.change {
   color: green;
   border: 2px solid green;
 }
+
+.blog-post {
+  border: 1px solid black;
+}

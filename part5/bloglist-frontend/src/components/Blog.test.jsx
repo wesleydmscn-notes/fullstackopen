@@ -25,3 +25,25 @@ test("renders the blog's title and author", () => {
   expect(screen.getByText("https://wesleydmscn.co")).toBeDefined()
   expect(screen.getByText("likes: 50")).toBeDefined()
 })
+
+test("content after clicking view button", async () => {
+  const blog = {
+    title: "Blog Test",
+    author: "Wesley Damasceno",
+    url: "https://wesleydmscn.co",
+    likes: 50,
+    user: {
+      username: "wesleydmscn",
+      name: "Wesley Damasceno",
+      id: "6557fc68425d2a985b9bfc8c",
+    },
+    id: "6557fc69425d2a985b9bfc92",
+  }
+
+  const { container } = render(<Blog blog={blog} user />)
+
+  const div = container.querySelector(".whenVisible")
+
+  expect(div).toHaveTextContent("https://wesleydmscn.co")
+  expect(div).toHaveTextContent("50")
+})

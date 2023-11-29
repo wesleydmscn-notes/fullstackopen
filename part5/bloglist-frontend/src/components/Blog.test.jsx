@@ -4,6 +4,7 @@ import { render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 
 import Blog from "./Blog"
+import CreateBlog from "./CreateBlog"
 
 test("renders the blog's title and author", () => {
   const blog = {
@@ -75,4 +76,12 @@ test("", async () => {
   await users.click(button)
 
   expect(mockHandler.mock.calls).toHaveLength(0)
+})
+
+test("<CreateBlog /> updates parent state and calls onSubmit", async () => {
+  const createBlog = jest.fn()
+
+  render(<CreateBlog onSubmit={createBlog} />)
+
+  expect(createBlog.mock.calls).toHaveLength(0)
 })

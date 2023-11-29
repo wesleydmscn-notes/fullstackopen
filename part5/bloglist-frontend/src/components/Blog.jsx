@@ -20,13 +20,13 @@ const Blog = ({ blog, onLikePost, onDeletePost, user }) => {
   return (
     <div className="blog-post" style={blogStyle}>
       <div style={hideWhenVisible}>
-        {blog.title}
+        {blog.title} - {blog.author}
         <button onClick={toggleVisibility} style={{ marginLeft: 8 }}>
           view
         </button>
       </div>
 
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className="whenVisible">
         <span>
           {blog.title}
           <button onClick={toggleVisibility} style={{ marginLeft: 8 }}>
@@ -64,8 +64,8 @@ const Blog = ({ blog, onLikePost, onDeletePost, user }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  onLikePost: PropTypes.func.isRequired,
-  onDeletePost: PropTypes.func.isRequired,
+  onLikePost: PropTypes.func,
+  onDeletePost: PropTypes.func,
   user: PropTypes.bool.isRequired,
 }
 

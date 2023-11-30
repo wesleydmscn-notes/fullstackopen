@@ -20,6 +20,7 @@ function Login(props) {
         <div>
           <label>username</label>
           <input
+            id="username"
             type="text"
             value={username}
             name="Username"
@@ -30,6 +31,7 @@ function Login(props) {
         <div>
           <label>password</label>
           <input
+            id="password"
             type="password"
             value={password}
             name="Password"
@@ -37,7 +39,9 @@ function Login(props) {
           />
         </div>
 
-        <button type="submit">login</button>
+        <button id="btn-login" type="submit">
+          login
+        </button>
       </form>
     </div>
   )

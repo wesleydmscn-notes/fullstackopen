@@ -133,9 +133,7 @@ const App = () => {
     if (isConfirmed) {
       await blogService.deletePost(blogID)
 
-      const filteredBlogs = blogs.filter(
-        (blogPost) => blogPost.id !== target.id
-      )
+      const filteredBlogs = blogs.filter((blogPost) => blogPost.id !== target.id)
 
       setBlogs(filteredBlogs)
     }

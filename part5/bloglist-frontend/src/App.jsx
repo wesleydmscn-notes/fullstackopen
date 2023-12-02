@@ -88,7 +88,7 @@ const App = () => {
 
       setTimeout(() => {
         setChangeMessage(null)
-      }, 2500)
+      }, 4000)
     } catch (exception) {
       setErrorMessage("Something wrong, please fill in all fields correctly.")
 

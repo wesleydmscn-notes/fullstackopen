@@ -45,4 +45,33 @@ describe("Blog app", function () {
       cy.get(".error").should("have.css", "color", "rgb(255, 0, 0)")
     })
   })
+
+  describe("When logged in", function () {
+    beforeEach(function () {
+      cy.contains("log in to application")
+      cy.get("#username").type("wesleydmscn")
+      cy.get("#password").type("12345")
+      cy.get("#btn-login").click()
+    })
+
+    it("A blog can be created", function () {
+      cy.contains("blogs")
+      cy.contains("new blog").click()
+      cy.contains("cancel")
+
+      cy.contains("create new blog")
+      cy.get("#input-title").type("Criando blog com Cypress")
+      cy.get("#input-author").type("Cypress")
+      cy.get("#input-url").type("https://wesleydmscn.co/blog")
+      cy.get("#input-likes").type("10")
+
+      cy.get("#create-new-blog").click()
+
+      cy.get(".change").should("contain", "A new blog Criando blog com Cypress by Cypress added")
+      cy.get(".change").should("have.css", "color", "rgb(0, 128, 0)")
+
+      cy.contains("Criando blog com Cypress - Cypress")
+      cy.contains("view")
+    })
+  })
 })

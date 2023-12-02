@@ -78,10 +78,14 @@ const App = () => {
         author,
         url,
         likes,
-        user: user.name,
       })
 
-      setBlogs(() => blogs.concat(returnedBlog))
+      const newBlogFields = {
+        ...returnedBlog,
+        user: { id: returnedBlog.user, username: user.username, name: user.name },
+      }
+
+      setBlogs(() => blogs.concat(newBlogFields))
       setChangeMessage(`A new blog ${title} by ${author} added`)
 
       clearFields()

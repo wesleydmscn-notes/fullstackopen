@@ -67,7 +67,10 @@ describe("Blog app", function () {
 
       cy.get("#create-new-blog").click()
 
-      cy.get(".change").should("contain", "A new blog Criando blog com Cypress by Cypress added")
+      cy.get(".change").should(
+        "contain",
+        "A new blog Criando blog com Cypress by Cypress added"
+      )
       cy.get(".change").should("have.css", "color", "rgb(0, 128, 0)")
 
       cy.contains("Criando blog com Cypress - Cypress")
@@ -93,6 +96,25 @@ describe("Blog app", function () {
       cy.contains("likes: 10")
       cy.get("#like-a-blog").click()
       cy.contains("likes: 11")
+    })
+
+    it("User who created a blog can delete it", function () {
+      cy.contains("blogs")
+      cy.contains("new blog").click()
+      cy.contains("cancel")
+
+      cy.contains("create new blog")
+      cy.get("#input-title").type("Criando blog com Cypress")
+      cy.get("#input-author").type("Wesley Damasceno")
+      cy.get("#input-url").type("https://wesleydmscn.co/")
+      cy.get("#input-likes").type("20")
+
+      cy.get("#create-new-blog").click()
+
+      cy.contains("Criando blog com Cypress - Wesley Damasceno")
+      cy.contains("view").click()
+
+      cy.get("#delete-a-blog").click()
     })
   })
 })

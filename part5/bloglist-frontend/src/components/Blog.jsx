@@ -53,7 +53,7 @@ const Blog = ({ blog, onLikePost, onDeletePost, user }) => {
         <br />
 
         {user && (
-          <button onClick={onDeletePost} style={{ marginTop: 8 }}>
+          <button id="delete-a-blog" onClick={onDeletePost} style={{ marginTop: 8 }}>
             remove
           </button>
         )}

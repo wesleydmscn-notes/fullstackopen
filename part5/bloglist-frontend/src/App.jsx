@@ -85,7 +85,9 @@ const App = () => {
         user: { id: returnedBlog.user, username: user.username, name: user.name },
       }
 
-      setBlogs(() => blogs.concat(newBlogFields))
+      const sortedByLikes = (prev, curr) => (prev.likes < curr.likes ? 1 : -1)
+
+      setBlogs((prev) => prev.concat(newBlogFields).sort(sortedByLikes))
       setChangeMessage(`A new blog ${title} by ${author} added`)
 
       clearFields()

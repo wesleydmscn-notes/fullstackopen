@@ -151,5 +151,40 @@ describe("Blog app", function () {
 
       cy.get("#delete-a-blog").should("not.exist")
     })
+
+    it("The blogs are ordered according to likes with the blog with the most likes being first", function () {
+      cy.contains("blogs")
+      cy.contains("new blog").click()
+      cy.contains("cancel")
+
+      cy.contains("create new blog")
+      cy.get("#input-title").type("Criando blog com Cypress")
+      cy.get("#input-author").type("Wesley Damasceno")
+      cy.get("#input-url").type("https://wesleydmscn.co/")
+      cy.get("#input-likes").type("20")
+
+      cy.get("#create-new-blog").click()
+
+      cy.get(".change").should(
+        "contain",
+        "A new blog Criando blog com Cypress by Wesley Damasceno added"
+      )
+      cy.get(".change").should("have.css", "color", "rgb(0, 128, 0)")
+
+      cy.get("#input-title").type("Criando blog com Cypress 2")
+      cy.get("#input-author").type("Wesley Damasceno")
+      cy.get("#input-url").type("https://wesleydmscn.co/")
+      cy.get("#input-likes").type("30")
+
+      cy.get("#create-new-blog").click()
+
+      cy.get(".blog-post")
+        .eq(0)
+        .should("contain", "Criando blog com Cypress 2 - Wesley Damasceno")
+
+      cy.get(".blog-post")
+        .eq(1)
+        .should("contain", "Criando blog com Cypress - Wesley Damasceno")
+    })
   })
 })

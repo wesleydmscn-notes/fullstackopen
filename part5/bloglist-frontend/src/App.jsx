@@ -78,17 +78,23 @@ const App = () => {
         author,
         url,
         likes,
-        user: user.name,
       })
 
-      setBlogs(() => blogs.concat(returnedBlog))
+      const newBlogFields = {
+        ...returnedBlog,
+        user: { id: returnedBlog.user, username: user.username, name: user.name },
+      }
+
+      const sortedByLikes = (prev, curr) => (prev.likes < curr.likes ? 1 : -1)
+
+      setBlogs((prev) => prev.concat(newBlogFields).sort(sortedByLikes))
       setChangeMessage(`A new blog ${title} by ${author} added`)
 
       clearFields()
 
       setTimeout(() => {
         setChangeMessage(null)
-      }, 2500)
+      }, 4000)
     } catch (exception) {
       setErrorMessage("Something wrong, please fill in all fields correctly.")
 
@@ -133,9 +139,7 @@ const App = () => {
     if (isConfirmed) {
       await blogService.deletePost(blogID)
 
-      const filteredBlogs = blogs.filter(
-        (blogPost) => blogPost.id !== target.id
-      )
+      const filteredBlogs = blogs.filter((blogPost) => blogPost.id !== target.id)
 
       setBlogs(filteredBlogs)
     }

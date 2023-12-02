@@ -38,7 +38,7 @@ const Blog = ({ blog, onLikePost, onDeletePost, user }) => {
 
         <span>
           likes: {blog.likes}
-          <button onClick={onLikePost} style={{ marginLeft: 8 }}>
+          <button id="like-a-blog" onClick={onLikePost} style={{ marginLeft: 8 }}>
             like
           </button>
         </span>
@@ -53,7 +53,7 @@ const Blog = ({ blog, onLikePost, onDeletePost, user }) => {
         <br />
 
         {user && (
-          <button onClick={onDeletePost} style={{ marginTop: 8 }}>
+          <button id="delete-a-blog" onClick={onDeletePost} style={{ marginTop: 8 }}>
             remove
           </button>
         )}

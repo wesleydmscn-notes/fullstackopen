@@ -25,6 +25,7 @@ const CreateBlog = forwardRef((props, refs) => {
         <div>
           <label>title:</label>
           <input
+            id="input-title"
             type="text"
             value={title}
             name="Title"
@@ -35,6 +36,7 @@ const CreateBlog = forwardRef((props, refs) => {
         <div>
           <label>author:</label>
           <input
+            id="input-author"
             type="text"
             value={author}
             name="Author"
@@ -45,6 +47,7 @@ const CreateBlog = forwardRef((props, refs) => {
         <div>
           <label>url:</label>
           <input
+            id="input-url"
             type="text"
             value={url}
             name="URL"
@@ -55,6 +58,7 @@ const CreateBlog = forwardRef((props, refs) => {
         <div>
           <label>likes:</label>
           <input
+            id="input-likes"
             type="number"
             value={likes}
             name="Likes"
@@ -62,7 +66,9 @@ const CreateBlog = forwardRef((props, refs) => {
           />
         </div>
 
-        <button type="submit">create</button>
+        <button id="create-new-blog" type="submit">
+          create
+        </button>
       </form>
     </>
   )

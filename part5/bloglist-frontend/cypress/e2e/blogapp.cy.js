@@ -73,5 +73,26 @@ describe("Blog app", function () {
       cy.contains("Criando blog com Cypress - Cypress")
       cy.contains("view")
     })
+
+    it("Users can like a blog", function () {
+      cy.contains("blogs")
+      cy.contains("new blog").click()
+      cy.contains("cancel")
+
+      cy.contains("create new blog")
+      cy.get("#input-title").type("Criando blog com Cypress")
+      cy.get("#input-author").type("Cypress")
+      cy.get("#input-url").type("https://wesleydmscn.co/blog")
+      cy.get("#input-likes").type("10")
+
+      cy.get("#create-new-blog").click()
+
+      cy.contains("Criando blog com Cypress - Cypress")
+      cy.contains("view").click()
+
+      cy.contains("likes: 10")
+      cy.get("#like-a-blog").click()
+      cy.contains("likes: 11")
+    })
   })
 })

@@ -38,7 +38,7 @@ const Blog = ({ blog, onLikePost, onDeletePost, user }) => {
 
         <span>
           likes: {blog.likes}
-          <button onClick={onLikePost} style={{ marginLeft: 8 }}>
+          <button id="like-a-blog" onClick={onLikePost} style={{ marginLeft: 8 }}>
             like
           </button>
         </span>

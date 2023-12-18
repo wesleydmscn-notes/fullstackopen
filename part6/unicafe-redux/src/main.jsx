@@ -32,15 +32,46 @@ const App = () => {
   }
 
   return (
-    <div>
-      <button onClick={good}>good</button>
-      <button onClick={ok}>ok</button>
-      <button onClick={bad}>bad</button>
-      <button onClick={zero}>reset stats</button>
+    <div
+      style={{
+        display: "flex",
+        minHeight: "calc(100vh - 5rem)",
+        alignItems: "center",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
+      <h1>Unicafe</h1>
 
-      <div>good {store.getState().good}</div>
-      <div>ok {store.getState().ok}</div>
-      <div>bad {store.getState().bad}</div>
+      <div style={{ display: "flex", gap: "1rem" }}>
+        <button style={{ backgroundColor: "greenyellow" }} onClick={good}>
+          good+
+        </button>
+
+        <button style={{ backgroundColor: "orange" }} onClick={ok}>
+          ok+
+        </button>
+
+        <button style={{ backgroundColor: "rosybrown" }} onClick={bad}>
+          bad+
+        </button>
+
+        <button onClick={zero}>reset stats</button>
+      </div>
+
+      <div style={{ display: "flex", gap: "2rem" }}>
+        <p style={{ fontSize: "1.5rem" }}>
+          <strong>good</strong> {store.getState().good}
+        </p>
+
+        <p style={{ fontSize: "1.5rem" }}>
+          <strong>ok</strong> {store.getState().ok}
+        </p>
+
+        <p style={{ fontSize: "1.5rem" }}>
+          <strong>bad</strong> {store.getState().bad}
+        </p>
+      </div>
     </div>
   )
 }

@@ -13,6 +13,7 @@ const App = () => {
   const handleSubmitAnecdote = (event) => {
     event.preventDefault()
     dispatch(addNewAnecdote(event.target.anecdote.value))
+    event.target.anecdote.value = ""
   }
 
   return (

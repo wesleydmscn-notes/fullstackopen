@@ -13,6 +13,10 @@ export const AnecdoteForm = () => {
     dispatch(showNotification(`You added "${event.target.anecdote.value}"!`))
 
     event.target.anecdote.value = ""
+
+    setTimeout(() => {
+      dispatch(showNotification(null))
+    }, 5000)
   }
 
   return (

@@ -1,12 +1,22 @@
-import ReactDOM from 'react-dom/client'
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
-import App from './App'
-import reducer from './reducers/anecdoteReducer'
+import ReactDOM from "react-dom/client"
+import { configureStore } from "@reduxjs/toolkit"
+import { Provider } from "react-redux"
 
-const store = createStore(reducer)
+import App from "./App"
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+import reducer from "./reducers/anecdoteReducer"
+import filterReducer from "./reducers/filterReducer"
+import notificationReducer from "./reducers/notificationReducer"
+
+const store = configureStore({
+  reducer: {
+    anecdotes: reducer,
+    filters: filterReducer,
+    notifications: notificationReducer,
+  },
+})
+
+ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <App />
   </Provider>

@@ -8,3 +8,6 @@ export const getAnecdotes = () => axios.get(baseURL).then((res) => res.data)
 
 export const createAnecdote = (newAnecdote) =>
   axios.post(baseURL, newAnecdote).then((res) => res.data)
+
+export const updateAnecdote = (updateAnecdote) =>
+  axios.put(`${baseURL}/${updateAnecdote.id}`, updateAnecdote).then((res) => res.data)

@@ -4,11 +4,9 @@ import { Provider } from "react-redux"
 
 import App from "./App"
 
-import reducer, { setNotes } from "./reducers/anecdoteReducer"
+import reducer from "./reducers/anecdoteReducer"
 import filterReducer from "./reducers/filterReducer"
 import notificationReducer from "./reducers/notificationReducer"
-
-import anecdoteService from "./services/anecdotes"
 
 const store = configureStore({
   reducer: {
@@ -17,8 +15,6 @@ const store = configureStore({
     notifications: notificationReducer,
   },
 })
-
-anecdoteService.getAll().then((notes) => store.dispatch(setNotes(notes)))
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>

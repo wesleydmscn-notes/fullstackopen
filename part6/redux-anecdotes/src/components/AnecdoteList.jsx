@@ -18,8 +18,9 @@ export const AnecdoteList = () => {
 
   const dispatch = useDispatch()
 
-  const vote = (id, content) => {
+  const vote = async (id, content) => {
     console.log("vote", id)
+
     dispatch(addVotes(id))
     dispatch(showNotification(`You voted for "${content}" !`))
 

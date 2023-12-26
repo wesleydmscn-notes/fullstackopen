@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 
 export const AnecdoteContext = createContext({})
 
@@ -27,6 +27,14 @@ export const AnecdoteProvider = ({ children }) => {
     setAnecdotes(anecdotes.concat(anecdote))
   }
 
+  const dispatchNotification = (message) => {
+    setNotification(message)
+
+    setTimeout(() => {
+      setNotification("")
+    }, 5000)
+  }
+
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id)
 
   const vote = (id) => {
@@ -41,7 +49,9 @@ export const AnecdoteProvider = ({ children }) => {
   }
 
   return (
-    <AnecdoteContext.Provider value={{ anecdotes, addNew, vote }}>
+    <AnecdoteContext.Provider
+      value={{ anecdotes, addNew, vote, notification, dispatchNotification }}
+    >
       {children}
     </AnecdoteContext.Provider>
   )

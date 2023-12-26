@@ -1,9 +1,11 @@
+import { useNavigate } from "react-router-dom"
 import { useContext, useState } from "react"
 
 import { AnecdoteContext } from "../contexts/Anecdotes"
 
 export const CreateNew = () => {
-  const { addNew } = useContext(AnecdoteContext)
+  const { addNew, dispatchNotification } = useContext(AnecdoteContext)
+  const navigate = useNavigate()
 
   const [content, setContent] = useState("")
   const [author, setAuthor] = useState("")
@@ -18,6 +20,9 @@ export const CreateNew = () => {
       info,
       votes: 0,
     })
+
+    dispatchNotification(`a new anecdote ${content} created!`)
+    navigate("/")
   }
 
   return (
@@ -32,6 +37,7 @@ export const CreateNew = () => {
             onChange={(e) => setContent(e.target.value)}
           />
         </div>
+
         <div>
           author
           <input
@@ -40,10 +46,12 @@ export const CreateNew = () => {
             onChange={(e) => setAuthor(e.target.value)}
           />
         </div>
+
         <div>
           url for more info
           <input name="info" value={info} onChange={(e) => setInfo(e.target.value)} />
         </div>
+
         <button>create</button>
       </form>
     </div>

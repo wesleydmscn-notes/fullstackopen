@@ -1,27 +1,25 @@
 import { useNavigate } from "react-router-dom"
-import { useContext, useState } from "react"
+import { useContext } from "react"
 
+import { useField } from "../hooks"
 import { AnecdoteContext } from "../contexts/Anecdotes"
 
 export const CreateNew = () => {
-  const { addNew, dispatchNotification } = useContext(AnecdoteContext)
   const navigate = useNavigate()
-
-  const [content, setContent] = useState("")
-  const [author, setAuthor] = useState("")
-  const [info, setInfo] = useState("")
+  const { addNew, dispatchNotification } = useContext(AnecdoteContext)
+  const formFields = useField("text")
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
     addNew({
-      content,
-      author,
-      info,
+      content: formFields.content,
+      author: formFields.author,
+      info: formFields.info,
       votes: 0,
     })
 
-    dispatchNotification(`a new anecdote ${content} created!`)
+    dispatchNotification(`a new anecdote ${formFields.content} created!`)
     navigate("/")
   }
 
@@ -33,8 +31,8 @@ export const CreateNew = () => {
           content
           <input
             name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            value={formFields.content}
+            onChange={formFields.onChangeContent}
           />
         </div>
 
@@ -42,17 +40,20 @@ export const CreateNew = () => {
           author
           <input
             name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
+            value={formFields.author}
+            onChange={formFields.onChangeAuthor}
           />
         </div>
 
         <div>
           url for more info
-          <input name="info" value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input name="info" value={formFields.info} onChange={formFields.onChangeInfo} />
         </div>
 
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="button" onClick={formFields.resetAllFields}>
+          reset
+        </button>
       </form>
     </div>
   )

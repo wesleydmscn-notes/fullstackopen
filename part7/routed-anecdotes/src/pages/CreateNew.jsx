@@ -50,7 +50,10 @@ export const CreateNew = () => {
           <input name="info" value={formFields.info} onChange={formFields.onChangeInfo} />
         </div>
 
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="button" onClick={formFields.resetAllFields}>
+          reset
+        </button>
       </form>
     </div>
   )

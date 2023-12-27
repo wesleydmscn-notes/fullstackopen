@@ -17,6 +17,12 @@ export const useField = (type) => {
     setInfo(event.target.value)
   }
 
+  const resetAllFields = () => {
+    setContent("")
+    setAuthor("")
+    setInfo("")
+  }
+
   return {
     type,
     content,
@@ -24,6 +30,7 @@ export const useField = (type) => {
     info,
     onChangeContent,
     onChangeAuthor,
-    onChangeInfo
+    onChangeInfo,
+    resetAllFields
   }
 }

@@ -1,4 +1,4 @@
-const listHelper = require("../utils/list_helper")
+const listHelper = require("../utils/list_helper");
 
 describe("most blogs ", () => {
   const listBlogs = [
@@ -50,13 +50,13 @@ describe("most blogs ", () => {
       likes: 2,
       __v: 0,
     },
-  ]
+  ];
 
   test("who has the largest amount of blogs", () => {
-    const result = listHelper.mostBlogs(listBlogs)
+    const result = listHelper.mostBlogs(listBlogs);
     expect(result).toEqual({
       author: "Robert C. Martin",
       blogs: 3,
-    })
-  })
-})
+    });
+  });
+});

@@ -1,4 +1,4 @@
-const listHelper = require("../utils/list_helper")
+const listHelper = require("../utils/list_helper");
 
 describe("most likes ", () => {
   const listBlogs = [
@@ -50,13 +50,13 @@ describe("most likes ", () => {
       likes: 2,
       __v: 0,
     },
-  ]
+  ];
 
   test("who has the largest amount of likes", () => {
-    const result = listHelper.mostLikes(listBlogs)
+    const result = listHelper.mostLikes(listBlogs);
     expect(result).toEqual({
       author: "Edsger W. Dijkstra",
       likes: 17,
-    })
-  })
-})
+    });
+  });
+});

@@ -8,6 +8,7 @@
   },
   "author": "Wesley Damasceno",
   "dependencies": {
-    "@apollo/server": "^4.10.0"
+    "@apollo/server": "^4.10.0",
+    "uuid": "^9.0.1"
   }
 }

@@ -1,0 +1,14 @@
+{
+  "name": "small-library",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "serve": "node --watch index.js"
+  },
+  "author": "Wesley Damasceno",
+  "dependencies": {
+    "@apollo/server": "^4.10.0",
+    "uuid": "^9.0.1"
+  }
+}
